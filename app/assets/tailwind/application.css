@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+@theme {
+  --color-paper:    #FBFAF5;
+  --color-ink:      #2A1B33;
+  --color-inksoft:  #6E6580;
+  --color-line:     #E7E2ED;
+  --color-lime:     #DAFF7D;
+  --color-mint:     #B2EF9B;
+  --color-lavender: #8C86AA;
+  --color-orchid:   #81559B;
+  --color-plum:     #7E3F8F;
+
+  --font-display: "Fraunces", serif;
+  --font-body:    "Inter", sans-serif;
+}
+
+@layer components {
+  .clamp-2 { display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+  .cut     { border-radius: 26px 6px 26px 6px; }
+  .cut-sm  { border-radius: 18px 4px 18px 4px; }
+
+  .thumb-icon { transition: transform .35s ease; }
+  .card:hover .thumb-icon { transform: scale(1.1) rotate(-3deg); }
+  .card:hover .card-frame { border-color: #81559B; }
+
+  .like-btn svg { transition: transform .18s ease; }
+  .like-pop { animation: pop .32s ease; }
+}
+
+@keyframes pop {
+  0%   { transform: scale(1); }
+  45%  { transform: scale(1.3); }
+  100% { transform: scale(1); }
+}
