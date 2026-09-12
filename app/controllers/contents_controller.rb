@@ -1,5 +1,5 @@
 class ContentsController < ApplicationController
-  before_action :set_content, only: [:show, :edit, :update, :destroy]
+  before_action :set_content, only: [:show, :edit, :update, :destroy, :like]
 
   def index
     @contents = Content.order(created_at: :desc)
@@ -37,6 +37,19 @@ class ContentsController < ApplicationController
     @content.destroy
 
     redirect_to contents_path, notice: "Content #{@content.title} was successfully deleted."
+  end
+
+  def like
+    @content.increment!(:like_count)
+
+    @content.broadcast_replace_to(
+      @content,
+      target: "like_count_#{@content.id}",
+      partial: "contents/like_count",
+      locals: { content: @content }
+    )
+
+    head :no_content
   end
 
   private

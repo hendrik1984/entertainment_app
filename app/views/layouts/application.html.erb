@@ -32,7 +32,9 @@
   </head>
 
   <body class="font-body text-ink min-h-screen">
+    <%= render "shared/header" %>
     <%= render "shared/flashes" %>
     <%= yield %>
+    <%= render "shared/footer" %>
   </body>
 </html>
