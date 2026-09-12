@@ -1,0 +1,8 @@
+<%= turbo_frame_tag "content_area", data: { turbo_action: "advance" } do %>
+  <div class="max-w-2xl mx-auto">
+    <h1 class="font-display font-semibold text-3xl text-ink">Create Content</h1>
+    <p class="text-sm font-medium text-orchid mb-8">Add to your library</p>
+
+    <%= render "form", content: @content %>
+  </div>
+<% end %>
