@@ -1,41 +1,12 @@
-<!-- Header -->
-<header class="bg-plum">
-  <div class="max-w-6xl mx-auto px-5 sm:px-8 h-16 flex items-center justify-between gap-6">
-    <a href="#" class="flex items-center gap-2 shrink-0">
-      <span class="w-2.5 h-2.5 rounded-full bg-lime"></span>
-      <span class="font-display font-600 text-xl tracking-tight text-white">Loop</span>
-    </a>
-
-    <nav class="hidden md:flex items-center gap-7 text-sm font-medium text-white/70">
-      <a href="#" class="text-white">Home</a>
-      <a href="#" class="hover:text-white transition-colors">Trending</a>
-      <a href="#" class="hover:text-white transition-colors">Following</a>
-      <a href="#" class="hover:text-white transition-colors">Library</a>
-    </nav>
-
-    <div class="flex items-center gap-3">
-      <label class="relative hidden sm:block">
-        <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-        </svg>
-        <input type="text" placeholder="Search Loop"
-          class="bg-white/10 border border-white/15 rounded-full text-sm text-white pl-9 pr-4 py-2 w-52 placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-lime/70" />
-      </label>
-      <button class="w-9 h-9 rounded-full bg-lime flex items-center justify-center text-sm font-semibold text-plum">A</button>
-    </div>
-  </div>
-</header>
-
 <main class="max-w-6xl mx-auto px-5 sm:px-8 py-10">
-
   <!-- Featured video -->
   <section class="mb-12">
     <p class="text-sm font-medium text-orchid mb-3">Picked for your evening</p>
     <div class="grid md:grid-cols-2 gap-6 items-stretch">
       <div class="card group cursor-pointer">
-        <div class="card-frame cut border-2 border-line overflow-hidden aspect-video bg-gradient-to-br from-orchid to-plum relative transition-colors">
+        <div class="border-2 border-line overflow-hidden aspect-video bg-gradient-to-br from-orchid to-plum relative transition-colors">
           <div class="absolute inset-0 flex items-center justify-center">
-            <svg class="thumb-icon w-16 h-16 text-white/30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3">
+            <svg class="w-16 h-16 text-white/30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3">
               <rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 4v14M16 4v14M3 9h5M16 9h5M3 13h5M16 13h5"/>
             </svg>
           </div>
@@ -45,7 +16,7 @@
 
       <div class="flex flex-col justify-center">
         <span class="inline-flex w-fit items-center text-xs font-medium bg-mint/40 text-plum px-2.5 py-1 rounded-full mb-3">Trailer</span>
-        <h1 class="font-display font-600 text-3xl leading-tight text-ink mb-3">Glass Horizon — Official Trailer</h1>
+        <h1 class="font-display font-semibold text-3xl leading-tight text-ink mb-3">Glass Horizon — Official Trailer</h1>
         <p class="text-inksoft text-sm mb-5 max-w-md">A city suspended in ice starts to thaw, and everyone who left has a reason to come back.</p>
         <div class="flex items-center gap-4 text-sm text-inksoft mb-6">
           <span class="flex items-center gap-1.5">
@@ -77,102 +48,65 @@
   <!-- Grid -->
   <section>
     <div class="flex items-end justify-between mb-6">
-      <h2 class="font-display font-600 text-xl text-ink">More to watch</h2>
+      <h2 class="font-display font-semibold text-xl text-ink">More to watch</h2>
       <button class="text-sm text-orchid hover:text-plum transition-colors">See all</button>
     </div>
-    <div id="video-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5"></div>
+
+    <% if @contents.any? %>
+      <div id="video-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <% @contents.each do |content| %>
+          <%= turbo_stream_from content, class: "hidden" %>
+
+          <%= link_to content_path(content), class: "card group block" do %>
+            <div class="border-2 border-line overflow-hidden aspect-video relative transition-colors hover:border-orchid">
+              <% if content.video.attached? %>
+                <%= video_tag url_for(content.video),
+                              class: "w-full h-full object-cover",
+                              muted: true,
+                              preload: "metadata" %>
+              <% else %>
+                <div class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-orchid to-plum">
+                  <svg class="w-10 h-10 text-white/30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
+                    <rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 4v14M16 4v14M3 9h5M16 9h5M3 13h5M16 13h5"/>
+                  </svg>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+
+          <div class="pt-3">
+            <span class="text-[11px] font-medium text-orchid">no category</span>
+            <h3 class="font-display font-semibold text-[15px] leading-snug text-ink clamp-2 mt-0.5"><%= content.title %></h3>
+
+            <div class="flex items-center justify-between mt-2.5">
+              <div class="flex items-center gap-2.5 text-xs text-inksoft">
+                <span>X views</span>
+                <span><%= content.created_at.strftime("%b %d, %Y") %></span>
+              </div>
+              <%= button_to like_content_path(content),
+                      method: :post,
+                      class: "flex items-center gap-1.5 text-xs font-medium text-inksoft bg-white border border-line rounded-full pl-2.5 pr-3 py-1.5 hover:border-orchid hover:text-orchid transition-colors cursor-pointer",
+                      form: { class: "inline-flex shrink-0" } do %>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20.8 8.6c0 3.7-3.4 6.2-8.8 11.4C6.6 14.8 3.2 12.3 3.2 8.6 3.2 5.9 5.4 4 8 4c1.7 0 3.2.9 4 2.3C12.8 4.9 14.3 4 16 4c2.6 0 4.8 1.9 4.8 4.6z"/>
+                </svg>
+
+                <%= render "contents/like_count", content: content %>
+
+              <% end %>
+            </div>
+
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="bg-white border-2 border-line rounded-none text-center py-16 px-6">
+        <h2 class="font-display font-semibold text-xl text-ink mb-2">No videos yet</h2>
+        <p class="text-inksoft mb-6">There are no videos available yet.</p>
+        <%= link_to "Create Content",
+                    new_content_path,
+                    class: "inline-block bg-ink text-white text-sm font-medium px-5 py-2.5 rounded-none hover:bg-plum transition-colors" %>
+      </div>
+    <% end %>
   </section>
 </main>
-
-<footer class="border-t border-line mt-14">
-  <div class="max-w-6xl mx-auto px-5 sm:px-8 py-8 text-sm text-inksoft flex flex-col sm:flex-row items-center justify-between gap-3">
-    <span>© 2026 Loop</span>
-    <div class="flex gap-5">
-      <a href="#" class="hover:text-ink transition-colors">About</a>
-      <a href="#" class="hover:text-ink transition-colors">Help</a>
-      <a href="#" class="hover:text-ink transition-colors">Privacy</a>
-    </div>
-  </div>
-</footer>
-
-<script>
-  // 8 videos here — the 9th is the featured trailer above
-  const videos = [
-    { title: "Midnight Sessions: Live Acoustic Set", category: "Music", duration: "8:24", views: "42K", posted: "3 days ago", likes: 812, block: "bg-gradient-to-br from-plum to-orchid",
-      icon: `<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>` },
-    { title: "Stand-Up Shorts: Open Mic Highlights", category: "Comedy", duration: "12:10", views: "128K", posted: "1 day ago", likes: 2310, block: "bg-orchid",
-      icon: `<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.5-7 8-7s8 3 8 7"/>` },
-    { title: "Neon Drift — Full Race Walkthrough", category: "Gaming", duration: "22:47", views: "76K", posted: "6 hours ago", likes: 1540, block: "bg-gradient-to-br from-ink to-plum",
-      icon: `<rect x="2" y="8" width="20" height="9" rx="4"/><line x1="7" y1="12.5" x2="7" y2="12.5"/><line x1="17" y1="12.5" x2="17" y2="12.5"/><line x1="5" y1="12.5" x2="9" y2="12.5"/>` },
-    { title: "Under the Reef: Ocean Life Up Close", category: "Documentary", duration: "34:02", views: "19K", posted: "2 weeks ago", likes: 640, block: "bg-lavender",
-      icon: `<path d="M2 12c3-3 6-3 9 0s6 3 9 0"/><path d="M2 17c3-3 6-3 9 0s6 3 9 0"/><path d="M2 7c3-3 6-3 9 0s6 3 9 0"/>` },
-    { title: "Night Owl Talks: Ep. 14", category: "Podcast", duration: "45:18", views: "8.9K", posted: "yesterday", likes: 214, block: "bg-gradient-to-br from-orchid to-ink",
-      icon: `<rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0014 0"/><line x1="12" y1="18" x2="12" y2="22"/>` },
-    { title: "Starlit Wanderers — Episode 3", category: "Anime", duration: "24:00", views: "203K", posted: "3 days ago", likes: 4108, block: "bg-plum",
-      icon: `<path d="M12 2l2.4 6.6L21 11l-6.6 2.4L12 20l-2.4-6.6L3 11l6.6-2.4L12 2z"/>` },
-    { title: "Weekend Recap: Best Plays", category: "Sports", duration: "9:56", views: "54K", posted: "4 days ago", likes: 977, block: "bg-gradient-to-br from-lavender to-plum",
-      icon: `<circle cx="12" cy="12" r="9"/><path d="M12 3a13 13 0 010 18M3 12h18M5.6 6.6a13 13 0 0012.8 0M5.6 17.4a13 13 0 0112.8 0"/>` },
-    { title: "The Green Room: Guest Interviews", category: "Talk Show", duration: "18:33", views: "31K", posted: "1 week ago", likes: 588, block: "bg-gradient-to-br from-plum to-lavender",
-      icon: `<path d="M21 15a4 4 0 01-4 4H8l-5 3V6a4 4 0 014-4h10a4 4 0 014 4z"/>` },
-  ];
-
-  const grid = document.getElementById('video-grid');
-
-  grid.innerHTML = videos.map(v => `
-    <article class="card group">
-      <div class="card-frame cut-sm border-2 border-line overflow-hidden aspect-video ${v.block} relative cursor-pointer transition-colors">
-        <div class="absolute inset-0 flex items-center justify-center">
-          <svg class="thumb-icon w-10 h-10 text-white/30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
-            ${v.icon}
-          </svg>
-        </div>
-        <span class="absolute bottom-2 right-2 text-[11px] font-medium bg-ink/70 text-white px-1.5 py-0.5 rounded">${v.duration}</span>
-      </div>
-
-      <div class="pt-3">
-        <span class="text-[11px] font-medium text-orchid">${v.category}</span>
-        <h3 class="font-display font-600 text-[15px] leading-snug text-ink clamp-2 mt-0.5">${v.title}</h3>
-
-        <div class="flex items-center justify-between mt-2.5">
-          <div class="flex items-center gap-2.5 text-xs text-inksoft">
-            <span>${v.views} views</span>
-            <span>${v.posted}</span>
-          </div>
-          <button class="like-btn flex items-center gap-1.5 text-xs font-medium text-inksoft bg-white border border-line rounded-full pl-2.5 pr-3 py-1.5 hover:border-orchid hover:text-orchid transition-colors"
-            data-likes="${v.likes}" data-liked="false">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M20.8 8.6c0 3.7-3.4 6.2-8.8 11.4C6.6 14.8 3.2 12.3 3.2 8.6 3.2 5.9 5.4 4 8 4c1.7 0 3.2.9 4 2.3C12.8 4.9 14.3 4 16 4c2.6 0 4.8 1.9 4.8 4.6z"/>
-            </svg>
-            <span class="like-count">${v.likes.toLocaleString()}</span>
-          </button>
-        </div>
-      </div>
-    </article>
-  `).join('');
-
-  document.body.addEventListener('click', (e) => {
-    const btn = e.target.closest('.like-btn');
-    if (!btn) return;
-
-    const svg = btn.querySelector('svg');
-    const countEl = btn.querySelector('.like-count');
-    const base = parseInt(btn.dataset.likes, 10);
-    const liked = btn.dataset.liked === 'true';
-
-    if (liked) {
-      btn.dataset.liked = 'false';
-      svg.setAttribute('fill', 'none');
-      svg.style.stroke = '';
-      btn.classList.remove('text-plum', 'border-plum', 'bg-plum/10');
-      countEl.textContent = base.toLocaleString();
-    } else {
-      btn.dataset.liked = 'true';
-      btn.classList.add('like-pop');
-      svg.setAttribute('fill', '#81559B');
-      svg.style.stroke = '#81559B';
-      btn.classList.add('text-plum', 'border-plum', 'bg-plum/10');
-      countEl.textContent = (base + 1).toLocaleString();
-      setTimeout(() => btn.classList.remove('like-pop'), 320);
-    }
-  });
-</script>

@@ -12,7 +12,11 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
 
-  resources :contents
+  resources :contents do
+    member do
+      post :like
+    end
+  end
   
   root "home#index"
 end
