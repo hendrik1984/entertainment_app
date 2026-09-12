@@ -1,0 +1,66 @@
+<%= form_with model: content, html: { multipart: true }, class: "space-y-6", data: { turbo_frame: "_top" } do |form| %>
+
+  <% if content.errors.any? %>
+    <div class="border-2 border-red-500 bg-red-50 rounded-none px-4 py-3 mb-6">
+      <p class="text-sm font-medium text-ink mb-2">
+        <%= pluralize(content.errors.count, "error") %> prevented this from saving:
+      </p>
+      <ul class="list-disc list-inside text-sm text-inksoft space-y-1">
+        <% content.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :title, class: "block text-sm font-medium text-inksoft mb-2" %>
+    <%= form.text_field :title,
+          class: [
+            "w-full bg-paper border rounded-none px-4 py-2.5 text-ink placeholder:text-inksoft/60",
+            "focus:outline-none focus:ring-2 transition-colors",
+            content.errors[:title].any? ?
+              "border-red-500 focus:border-red-500 focus:ring-red-500/20" :
+              "border-line focus:border-orchid focus:ring-orchid/20"
+          ].join(" "),
+          autocomplete: "off" %>
+  </div>
+
+  <div>
+    <%= form.label :description, class: "block text-sm font-medium text-inksoft mb-2" %>
+    <%= form.text_area :description, rows: 5,
+          class: [
+            "w-full bg-paper border rounded-none px-4 py-3 text-ink placeholder:text-inksoft/60",
+            "focus:outline-none focus:ring-2 transition-colors resize-y",
+            content.errors[:description].any? ?
+              "border-red-500 focus:border-red-500 focus:ring-red-500/20" :
+              "border-line focus:border-orchid focus:ring-orchid/20"
+          ].join(" ") %>
+  </div>
+
+  <div>
+  <%= form.label :video, class: "block text-sm font-medium text-inksoft mb-2" %>
+  <%= form.file_field :video,
+        accept: "video/*",
+        class: [
+          "w-full bg-paper border rounded-none px-4 py-2.5 text-ink",
+          "file:mr-4 file:py-2 file:px-4 file:rounded-none file:border-0",
+          "file:text-sm file:font-medium file:bg-ink file:text-white",
+          "hover:file:bg-plum file:cursor-pointer file:transition-colors",
+          "focus:outline-none focus:ring-2 transition-colors",
+          content.errors[:video].any? ?
+            "border-red-500 focus:border-red-500 focus:ring-red-500/20" :
+            "border-line focus:border-orchid focus:ring-orchid/20"
+        ].join(" ") %>
+</div>
+
+  <div class="flex items-center gap-3 pt-2">
+    <%= form.submit "Publish",
+      class: "flex items-center gap-2 bg-ink text-white text-sm font-medium px-6 py-2.5 rounded-full
+              hover:bg-plum transition-colors cursor-pointer" %>
+
+    <%= link_to "Cancel", contents_path,
+      class: "text-sm font-medium text-inksoft hover:text-orchid transition-colors px-4 py-2.5" %>
+  </div>
+
+<% end %>

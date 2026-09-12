@@ -1,0 +1,7 @@
+<%= turbo_frame_tag "content_area", data: { turbo_action: "advance" } do %>
+  <div class="max-w-2xl mx-auto">
+    <h1 class="font-display font-semibold text-3xl text-ink">Edit Content</h1>
+
+    <%= render "form", content: @content %>
+  </div>
+<% end %>

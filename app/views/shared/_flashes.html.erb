@@ -1,0 +1,52 @@
+<% flash.each do |type, message| %>
+  <% next if message.blank? %>
+
+  <%
+    styles = case type.to_sym
+    when :notice, :success
+      { wrapper: "bg-mint/30 border-mint",       icon: "text-plum",    text: "text-ink", close: "text-plum hover:text-ink" }
+    when :alert, :error
+      { wrapper: "bg-orchid/10 border-orchid",    icon: "text-orchid",  text: "text-ink", close: "text-orchid hover:text-plum" }
+    when :warning
+      { wrapper: "bg-lime/40 border-lime",        icon: "text-plum",    text: "text-ink", close: "text-plum hover:text-ink" }
+    else
+      { wrapper: "bg-lavender/15 border-lavender",icon: "text-plum",    text: "text-ink", close: "text-plum hover:text-ink" }
+    end
+  %>
+
+  <div class="max-w-6xl mx-auto px-5 sm:px-8 pt-6" data-controller="flash">
+    <div class="flex items-start gap-3 border-2 rounded-none px-4 py-3 <%= styles[:wrapper] %>"
+         role="alert">
+
+      <div class="shrink-0 mt-0.5 <%= styles[:icon] %>">
+        <% if type.to_sym == :alert || type.to_sym == :error %>
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12" y2="16"/>
+          </svg>
+        <% elsif type.to_sym == :warning %>
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M10.3 3.9L1.8 18a2 2 0 001.7 3h17a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/>
+            <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12" y2="17"/>
+          </svg>
+        <% else %>
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/>
+          </svg>
+        <% end %>
+      </div>
+
+      <p class="flex-1 text-sm font-medium <%= styles[:text] %>">
+        <%= message %>
+      </p>
+
+      <button type="button"
+              data-action="flash#dismiss"
+              class="shrink-0 -mr-1 p-1 transition-colors <%= styles[:close] %>"
+              aria-label="Dismiss">
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+<% end %>

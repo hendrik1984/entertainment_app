@@ -1,0 +1,62 @@
+<%= turbo_frame_tag "content_area", data: {turbo_action: "advance" } do %>
+  <div class="max-w-7xl mx-auto px-5 sm:px-8 py-10">
+    <div class="flex items-center justify-between mb-8">
+      <div>
+        <p class="text-sm font-medium text-orchid mb-1">Your library</p>
+        <h1 class="font-display font-semibold text-3xl text-ink">Entertainment Content</h1>
+      </div>
+
+      <%= link_to "Add Content",
+                  new_content_path,
+                  class: "bg-ink text-white text-sm font-medium px-5 py-2.5 rounded-none
+                          hover:bg-plum transition-colors" %>
+    </div>
+
+    <% if @contents.any? %>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <% @contents.each do |content| %>
+          <%= link_to content_path(content), class: "block" do %>
+            <div class="bg-white border-2 border-line cut-sm p-6 hover:border-orchid transition-colors">
+              <% if content.video.attached? %>
+                <div class="mb-4 bg-paper border border-line rounded-none overflow-hidden aspect-video">
+                  <%= video_tag url_for(content.video),
+                                class: "w-full h-full object-cover",
+                                disablePictureInPicture: true,
+                                controlsList: "nopictureinpicture",
+                                muted: true,
+                                preload: "metadata" %>
+                </div>
+              <% else %>
+                <div class="mb-4 bg-paper border border-line rounded-none aspect-video flex items-center justify-center">
+                  <span class="text-sm text-inksoft">No video</span>
+                </div>
+              <% end %>
+
+              <h2 class="font-display font-semibold text-xl text-ink mb-2 clamp-2">
+                <%= content.title %>
+              </h2>
+
+              <p class="text-sm text-inksoft clamp-2">
+                <%= content.description %>
+              </p>
+
+              <p class="text-inksoft whitespace-pre-line leading-relaxed mb-6">
+                <%= content.created_at.strftime("%B %d, %Y") %>
+              </p>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="text-center py-16">
+        <p class="text-inksoft mb-4">
+          No content available yet.
+        </p>
+
+        <%= link_to "Create your first content",
+                    new_content_path,
+                    class: "text-orchid hover:text-plum font-medium transition-colors" %>
+      </div>
+    <% end %>
+  </div>
+<% end %>
