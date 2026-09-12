@@ -4,14 +4,68 @@ The core technical learning goal stays the same. We simply change Photo → Vide
 
 # Milestone 1 - Rails Foundation
 Set up the Rails application and basic development environment.
-Step 1: Create Rails 8 application
-Step 2: Configure PostgreSQL
-Step 3: Configure Docker Compose
-Step 4: Configure environment variables
-Step 5: Verify Rails and PostgreSQL connection
-Step 6: Configure Tailwind CSS
-Step 7: Create application layout
-Step 8: Create basic home page
+Step 1 — Create Rails 8 Application
+Create the Rails 8 application configured for PostgreSQL.
+
+Step 2 — Dockerize Rails and PostgreSQL
+Configure Docker Compose so both the Rails application and PostgreSQL run inside containers.
+
+notes:
+since we using docker-compose-dev.yml the custom file. to run the command docker compose must use -f
+
+if file name docker-compose.yml commnand : docker compose up -d --build
+if custom file name docker-compose-dev.yml command : docker compose -f docker-compose-dev.yml up -d --build
+
+This step will include:
+Rails web container
+PostgreSQL database container
+Dockerfile
+compose.yml
+PostgreSQL environment configuration
+Rails database configuration
+Environment variables
+Rails ↔ PostgreSQL connection
+Running Rails commands inside the container
+Creating the development database
+Verifying the application works entirely through Docker Compose
+
+The target architecture will be:
+
+Docker Compose
+│
+├── web
+│   └── Rails 8
+│
+└── postgres
+    └── PostgreSQL
+
+And:
+Browser
+   │
+   ▼
+Rails container
+   │
+   │ PostgreSQL connection
+   ▼
+PostgreSQL container
+
+Step 3 — Configure Tailwind CSS
+Set up Tailwind CSS for the application's UI.
+color palettes
+DAFF7D
+B2EF9B
+8C86AA
+81559B
+7E3F8F
+
+Step 4 — Create Application Layout
+Create the common Rails layout and navigation structure.
+
+Step 5 — Create Basic Home Page
+Create the initial entertainment application home page.
+
+Step 6 — Add Health Check
+Add a simple health-check endpoint/page to verify the Rails application is running correctly.
 
 # Milestone 2 - Entertainment Content CRUD
 Build the basic content management functionality for video content.
